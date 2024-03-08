@@ -1,55 +1,55 @@
 import controller.UserController;
 import model.User;
-import org.nocrala.tools.texttablefmt.BorderStyle;
-import org.nocrala.tools.texttablefmt.Table;
 import view.View;
 
 import java.util.Scanner;
 
 public class Main {
-    private final static UserController Controller = new UserController();
+    private static final UserController controller = new UserController();
     private static final Scanner scanner = new Scanner(System.in);
-    private static final User user = new User();
+
     public static void main(String[] args) {
-//        controller.getAllUsers();
-        while (true){
-            System.out.println("=".repeat(10)+"Welcome to Crud"+"=".repeat(10));
-            View.ui();
-            switch (View.option()){
-                case 1->{
+        while (true) {
+            System.out.println("=".repeat(10) + "Welcome to Crud" + "=".repeat(10));
+            View view = new View();
+            view.displayMenu();
+            int option = view.getOption();
+            switch (option) {
+                case 1 -> {
                     System.out.println(">> Display All Users");
-                    Controller.getAllUsers().forEach(System.out::println);
+                    controller.getAllUsers().forEach(System.out::println);
                 }
-                case 2->{
+                case 2 -> {
                     System.out.println(">> Create Users");
-                    UserController.insertUser(View.insertUserView(user));
-                 }
-                case 3->{
+                    User user = view.insertUser();
+                    controller.insertUser(user);
+                }
+                case 3 -> {
                     System.out.println(">> Update Users");
-                    System.out.print("Enter Id To Update :");
-                    user.setUserId(Integer.parseInt(scanner.nextLine()));
-//                    return getUser();
+                    int userIdToUpdate = view.getUserIdToUpdate();
+                    User updatedUser = view.insertUser();
+                    updatedUser.setUserId(userIdToUpdate);
+                    controller.updateUser(updatedUser);
                 }
-                case 4->{
+                case 4 -> {
                     System.out.println(">> Delete Users");
-                    System.out.print("Enter Id to Delete");
-//                    try{
-//                        return Integer.parseInt(scanner.nextLine());
-//
-//                    }catch (NumberFormatException e) {
-//                        System.out.println(e.getMessage());
-//                    }
-//                    return null;
+                    int userIdToDelete = view.getUserIdToDelete();
+                    User userToDelete = controller.deleteById(userIdToDelete);
+                    if (userToDelete != null) {
+                        System.out.println("Deleting user:");
+                        System.out.println(userToDelete);
+                        controller.deleteById(userIdToDelete);
+                    } else {
+                        System.out.println("User not found.");
+                    }
                 }
-                case 5->{
+                case 5 -> {
                     System.out.println(">> Exit");
+                    view.closeScanner();
                     return;
                 }
-                default -> {
-                    System.out.println("No option.");
-                }
+                default -> System.out.println("Invalid option.");
             }
         }
     }
-
 }

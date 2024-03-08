@@ -8,7 +8,7 @@ import java.util.List;
 
 public class UserRepository {
     public static List<User> getAllUsers() {
-        String sql = "SELECT * FROM database_users ";
+        String sql = "SELECT * FROM school ";
         List<User> userList = new ArrayList<>();
         PropertiesLoader.loadProperties();
         try (
@@ -72,7 +72,7 @@ public class UserRepository {
     }
 
     public static Integer deleteById(Integer id) {
-        String sql = "DELETE FROM database_users WHERE user_id = ?";
+        String sql = "DELETE FROM school WHERE user_id = ?";
         try (
                 Connection connection = DriverManager.getConnection(
                         PropertiesLoader.properties.getProperty("database_URL"),
@@ -82,15 +82,16 @@ public class UserRepository {
         ) {
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
-        } catch (SQLException e) {
+        } catch (SQLException exception) {
 
         }
         return id;
     }
 
+
     public static User insertUser(User user) {
         PropertiesLoader.loadProperties();
-        String sql = "INSERT INTO database_users (user_uuid, user_name, user_email, user_password, is_deleted, is_verified) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO school (user_uuid, user_name, user_email, user_password, is_deleted, is_verified) VALUES (?, ?, ?, ?, ?, ?)";
         try (
                 Connection connection = DriverManager.getConnection(
                         PropertiesLoader.properties.getProperty("database_url"),
