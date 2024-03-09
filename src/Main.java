@@ -1,8 +1,10 @@
 import controller.UserController;
 import model.User;
+import repository.UserRepository;
 import view.View;
 
 import java.util.Scanner;
+import java.util.UUID;
 
 public class Main {
     private static final UserController controller = new UserController();
@@ -26,21 +28,28 @@ public class Main {
                 }
                 case 3 -> {
                     System.out.println(">> Update Users");
-                    int userIdToUpdate = view.getUserIdToUpdate();
-                    User updatedUser = view.insertUser();
-                    updatedUser.setUserId(userIdToUpdate);
-                    controller.updateUser(updatedUser);
+                    int userIdToUpdate = view.getUserIdToUpdate ();
+                    System.out.print("Enter new username : ");
+                    String newUserName = new Scanner(System.in).nextLine();
+                    System.out.print("Enter new userEmail : ");
+                    String newUserEmail = new Scanner(System.in).nextLine();
+//                    User updatedUser = view.insertUser();
+//                    updatedUser.setUserId(userIdToUpdate);
+                     controller.updateUser(userIdToUpdate,new User(userIdToUpdate, UUID.randomUUID().toString(),newUserName,newUserEmail,UUID.randomUUID().toString()+"2324",false,false));
+
+
+
                 }
                 case 4 -> {
 
                     // Delete the user and get their ID
                     System.out.println(">> Delete Users");
                     int getUserIdToDelete = view.getUserIdToDelete();
-                 int userToDelete =  UserController.deleteUserByID(getUserIdToDelete);
+                 int userToDelete =  controller.deleteUserByID(getUserIdToDelete);
                     if (userToDelete  != 0) {
                         System.out.println("Deleting user:");
                         System.out.println(userToDelete);
-                       UserController.deleteUserByID(userToDelete);
+                        controller.deleteUserByID(userToDelete);
                     } else {
                         System.out.println("User not found.");
                     }

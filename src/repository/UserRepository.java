@@ -5,6 +5,7 @@ import model.User;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class UserRepository {
     public static List<User> getAllUsers() {
@@ -35,41 +36,34 @@ public class UserRepository {
         return userList;
     }
 
-    public static User updateUser(User user)  {
+    public static User updateUser(int id, User user)  {
         PropertiesLoader.loadProperties();
-        String sql = "update database_users SET user_uuid = ?,  user_name = ?, user_email = ? , user_password = ?, is_deleted = ?, is_verified = ? where user_id = ?";
-        try (
-                Connection connection = DriverManager.getConnection(
-                        PropertiesLoader.properties.getProperty("database_URL"),
-                        PropertiesLoader.properties.getProperty("database_username"),
-                        PropertiesLoader.properties.getProperty("database_password"));
-                PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        ){
+        // SQL query updateUserById
+        String sql = "UPDATE database_users SET user_uuid = ?, user_name = ?, user_email = ?, user_password = ?, is_deleted = ?, is_verified = ? WHERE user_id = ?";
+        try (Connection connection = DriverManager.getConnection(
+                PropertiesLoader.properties.getProperty("database_url"),
+                PropertiesLoader.properties.getProperty("database_username"),
+                PropertiesLoader.properties.getProperty("database_password")
+        );
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            System.out.println("Connected to database");
             preparedStatement.setString(1, user.getUserUuid());
             preparedStatement.setString(2, user.getUserName());
             preparedStatement.setString(3, user.getUserEmail());
             preparedStatement.setString(4, user.getUserPassword());
             preparedStatement.setBoolean(5, user.getIsDeleted());
             preparedStatement.setBoolean(6, user.getIsVerified());
-            preparedStatement.setInt(7, user.getUserId());
-            try (ResultSet resultSet = preparedStatement.executeQuery()){
-                while (resultSet.next()) {
-                    return new User(
-                            resultSet.getInt("user_id"),
-                            resultSet.getString("user_uuid"),
-                            resultSet.getString("user_name"),
-                            resultSet.getString("user_email"),
-                            resultSet.getString("user_password"),
-                            resultSet.getBoolean("is_deleted"),
-                            resultSet.getBoolean("is_verified")
-                    );
-                }
-            }
+            preparedStatement.setInt(7, id);
+
+            return (User) preparedStatement.executeQuery();
+        } catch (SQLException sqlException) {
+            System.out.println("Problem during updating data in database: " + sqlException.getMessage());
         }
-        catch (SQLException exception) {
-        }
-        return  user;
+        return user;
+
     }
+
 
     public static Integer deleteById (Integer id) {
         String sql = "DELETE FROM database_users WHERE user_id = ?";
@@ -87,7 +81,6 @@ public class UserRepository {
         }
         return id;
     }
-
 
     public static User insertUser(User user) {
         PropertiesLoader.loadProperties();
