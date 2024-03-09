@@ -32,13 +32,15 @@ public class Main {
                     controller.updateUser(updatedUser);
                 }
                 case 4 -> {
+
+                    // Delete the user and get their ID
                     System.out.println(">> Delete Users");
-                    int userIdToDelete = view.getUserIdToDelete();
-                    User userToDelete = controller.deleteById(userIdToDelete);
-                    if (userToDelete != null) {
+                    int getUserIdToDelete = view.getUserIdToDelete();
+                 int userToDelete =  UserController.deleteUserByID(getUserIdToDelete);
+                    if (userToDelete  != 0) {
                         System.out.println("Deleting user:");
                         System.out.println(userToDelete);
-                        controller.deleteById(userIdToDelete);
+                       UserController.deleteUserByID(userToDelete);
                     } else {
                         System.out.println("User not found.");
                     }

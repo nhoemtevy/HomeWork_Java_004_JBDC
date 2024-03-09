@@ -8,7 +8,7 @@ import java.util.List;
 
 public class UserRepository {
     public static List<User> getAllUsers() {
-        String sql = "SELECT * FROM school ";
+        String sql = "SELECT * FROM database_users ";
         List<User> userList = new ArrayList<>();
         PropertiesLoader.loadProperties();
         try (
@@ -37,7 +37,7 @@ public class UserRepository {
 
     public static User updateUser(User user)  {
         PropertiesLoader.loadProperties();
-        String sql = "update users SET user_uuid = ?,  user_name = ?, user_email = ? , user_password = ?, is_deleted = ?, is_verified = ? where user_id = ?";
+        String sql = "update database_users SET user_uuid = ?,  user_name = ?, user_email = ? , user_password = ?, is_deleted = ?, is_verified = ? where user_id = ?";
         try (
                 Connection connection = DriverManager.getConnection(
                         PropertiesLoader.properties.getProperty("database_URL"),
@@ -66,23 +66,23 @@ public class UserRepository {
                 }
             }
         }
-        catch (SQLException e) {
+        catch (SQLException exception) {
         }
         return  user;
     }
 
-    public static Integer deleteById(Integer id) {
-        String sql = "DELETE FROM school WHERE user_id = ?";
+    public static Integer deleteById (Integer id) {
+        String sql = "DELETE FROM database_users WHERE user_id = ?";
         try (
                 Connection connection = DriverManager.getConnection(
-                        PropertiesLoader.properties.getProperty("database_URL"),
+                        PropertiesLoader.properties.getProperty("database_url"),
                         PropertiesLoader.properties.getProperty("database_username"),
                         PropertiesLoader.properties.getProperty("database_password"));
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
         ) {
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
-        } catch (SQLException exception) {
+        } catch (SQLException e) {
 
         }
         return id;
@@ -91,7 +91,7 @@ public class UserRepository {
 
     public static User insertUser(User user) {
         PropertiesLoader.loadProperties();
-        String sql = "INSERT INTO school (user_uuid, user_name, user_email, user_password, is_deleted, is_verified) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO database_users (user_uuid, user_name, user_email, user_password, is_deleted, is_verified) VALUES (?, ?, ?, ?, ?, ?)";
         try (
                 Connection connection = DriverManager.getConnection(
                         PropertiesLoader.properties.getProperty("database_url"),

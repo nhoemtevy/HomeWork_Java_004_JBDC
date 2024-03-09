@@ -9,6 +9,7 @@ import java.util.Scanner;
 import java.util.UUID;
 
 public class View {
+    public static   final User user = new User();
     private final Scanner scanner;
 
     public View() {
@@ -31,7 +32,7 @@ public class View {
             System.out.println("Invalid option. Please enter a number.");
             scanner.next();
         }
-        return scanner.nextInt();
+        return Integer.parseInt(scanner.nextLine());
     }
 
     public User insertUser() {
@@ -57,11 +58,12 @@ public class View {
         return scanner.nextInt();
     }
 
+
     public int getUserIdToDelete() {
         System.out.print("Enter Id to Delete: ");
         while (!scanner.hasNextInt()) {
             System.out.println("Invalid id. Please enter a number.");
-            scanner.next();
+           user.setUserId( Integer.parseInt(scanner.next()));
         }
         return scanner.nextInt();
     }

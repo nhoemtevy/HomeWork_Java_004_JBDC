@@ -10,12 +10,12 @@ public class UserController {
         return UserRepository.getAllUsers();
     }
     public static void updateUser(User user) {
-        UserRepository.updateUser(user);
+       UserRepository.updateUser(user);
     }
 
-    public static User deleteById(Integer id) {
-       UserRepository.deleteById(id);
-        return null;
+    public static int deleteUserByID(Integer id) {
+      return    UserRepository.deleteById(id);
+
     }
 public static void insertUser(User user){
     UserRepository.insertUser(user);
